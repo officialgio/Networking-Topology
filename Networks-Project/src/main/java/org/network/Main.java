@@ -22,6 +22,5 @@ public class Main {
         initializer.init();
         routers = Initializer.currentRouters;
         System.out.println(routers);
-
     }
 }
