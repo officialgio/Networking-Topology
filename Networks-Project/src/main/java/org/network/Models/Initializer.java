@@ -1,8 +1,6 @@
 package org.network.Models;
 
 import lombok.NoArgsConstructor;
-import org.network.Topologies.Graph;
-import org.network.Topologies.GraphDemo2;
 
 import java.io.*;
 import java.util.*;
@@ -14,7 +12,7 @@ import java.util.*;
 public class Initializer {
     private static final String FILE_NAME = "src/config.csv";
     private static File file = new File(FILE_NAME);
-    private static List<Router> trackedRouters = new ArrayList<>();
+    private static List<Router> trackedNeighborRouters = new ArrayList<>();
 
     public static List<Router> currentRouters = new ArrayList<>();
 
@@ -38,6 +36,7 @@ public class Initializer {
             }
         }
         populateRouters();
+        buildRoutingTable();
     }
 
     private static void populateRouters() {
@@ -78,7 +77,7 @@ public class Initializer {
                         neighborName = element.substring(1);
                         neighborRouter.setName(neighborName);
 
-                        trackedRouters.add(neighborRouter);
+                        trackedNeighborRouters.add(neighborRouter);
 
                         // add neighbor if it doesn't exist
                         if (!routerMap.containsKey(router.getName())) {
@@ -101,10 +100,14 @@ public class Initializer {
                 }
                 currentRouters.add(router);
                 // TODO: Add to a graph instead???
-                // TODO: Ensure to continue to add the rest of the routers adjacent to one another.
             }
+
             System.out.println("Repopulating any additional neighbors for destinations...");
-            repopulateRouterDestinations();
+            // Repopulate destinations for each router
+
+            rePopulateRouterDestinations();
+            rePopulateCostForRouters();
+            // After populating routers
             System.out.println("Done adding neighbors...\n");
             reader.close();
         } catch (IOException e) {
@@ -118,28 +121,97 @@ public class Initializer {
     // Assuming the current router (Rout) is not equal a tracked router, iterate over all Rout's destinations
     // and check that if any tracked router isn't there already. If at any point there's a neighbor router that exist
     // in the destinations then break and don't re-add  the same router.
-    private static void repopulateRouterDestinations() {
+    private static void rePopulateRouterDestinations() {
         for (Router rout : currentRouters) {
             List<Router> destinations = rout.getDestinations();
-            for (Router neighborRouter : trackedRouters) {
-                // Check if the neighborRouter is not equal to the current router
+            for (Router neighborRouter : trackedNeighborRouters) {
                 if (!Objects.equals(rout.getName(), neighborRouter.getName())) {
                     String neighborRouterName = neighborRouter.getName();
                     boolean isPartOfDestinations = false;
                     for (Router destination : destinations) {
                         String destinationName = destination.getName();
-                        // Check if the neighborRouter's name is in the destinations
                         if (destinationName.equals(neighborRouterName)) {
                             isPartOfDestinations = true;
                             break;
                         }
                     }
-                    // If the neighborRouter is not part of the destinations, add it
                     if (!isPartOfDestinations) {
                         rout.getDestinations().add(neighborRouter);
                     }
                 }
             }
         }
+    }
+
+    // When adding a router from the .csv file we're not able to add its cost because it only provides the neighbors data.
+    // Therefore, we've must go over R2 or any other neighbor and find the cost for the R1 router and vice versa.
+    private static void rePopulateCostForRouters() {
+        for (Router router: currentRouters) {
+            boolean matchFound = false;
+            for (Router routerDestination : trackedNeighborRouters) {
+                if (router.getName().equals(routerDestination.getName())) {
+                    router.setCost(routerDestination.getCost());
+                    matchFound = true;
+                    break; // No need to continue searching
+                }
+            }
+            if (!matchFound) {
+                System.out.println("No matching neighbor found for router: " + router.getName());
+            }
+        }
+    }
+
+    // TODO: This is similar to destination but now we need to route the direct neighbors
+    // instead of all possible routes.
+    private static void reRouteDirectRoutes() { }
+
+    private static void buildRoutingTable() {
+        for (Router router : currentRouters) {
+            Map<Router, Integer> routingTable = new HashMap<>();
+
+            // Add directly connected neighbors to the routing table with their costs
+            // TODO: Directly connected will change not be -1 but instead the cost
+            for (Router neighbor : router.getNeighbors()) {
+                int cost = neighbor.getCost();
+                routingTable.put(neighbor, cost);
+            }
+
+            // Add other destinations with initial cost '-1'
+            for (Router destination : router.getDestinations()) {
+                final int INITIAL_COST = -1;
+                routingTable.put(destination, INITIAL_COST);
+            }
+
+            // Set the routing table for the current router
+            router.setRoutingTable(routingTable);
+        }
+    }
+
+    public static void printRouters() {
+        final String ANSI_RESET = "\u001B[0m";
+        final String ANSI_BLUE = "\u001B[34m";
+        currentRouters.forEach(s -> {
+            System.out.println("------------------------------------------------------");
+            System.out.println(ANSI_BLUE
+                    + s.getName()
+                    + ANSI_RESET);
+            System.out.println("{");
+            System.out.println("\tNeighbours: " + s.getNeighbors());
+
+            System.out.print("\tDestinations: ");
+            System.out.print("[");
+            s.getDestinations().forEach(System.out::print);
+            System.out.println("\n\t]");
+            System.out.println("\n\tCost: " + s.getCost());
+            System.out.print("\tRouting Table: ");
+            System.out.print("[");
+            System.out.println("\n\t\tkey\t\tvalue");
+            s.getRoutingTable().forEach((router, integer) -> {
+                System.out.println("\t\t" + router.getName() + "\t\t" + integer);
+            });
+            System.out.println("\n\t]");
+            System.out.println("}");
+            System.out.println("------------------------------------------------------");
+        });
     }
 }

@@ -3,12 +3,8 @@ package org.network.Models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Getter
 @Setter
@@ -19,7 +15,7 @@ public class Router implements IRouter {
     private List<Router> neighbors;
     private List<Router> destinations;
     private Integer cost;
-    private Map<Router, RouterInfo> routingTable;
+    private Map<Router, Integer> routingTable;
 
     public Router(String name) {
         this.name = name;
@@ -31,7 +27,7 @@ public class Router implements IRouter {
 
     @Override
     public void displayTable() {
-
+        name = "";
     }
 
     @Override
@@ -51,35 +47,13 @@ public class Router implements IRouter {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Router: ").append(name).append("\n");
-        sb.append("Cost: ").append(cost).append("\n");
-
-        sb.append("Neighbors: [");
-        for (Router neighbor : neighbors) {
-            sb.append(neighbor.getName()).append(", ");
-        }
-        if (!neighbors.isEmpty()) {
-            sb.setLength(sb.length() - 2); // Remove the last ", " if there are neighbors
-        }
-        sb.append("]\n");
-        sb.append("Destinations: [");
-        for (Router destination : destinations) {
-            sb.append(destination.getName()).append(", ");
-        }
-        if (!destinations.isEmpty()) {
-            sb.setLength(sb.length() - 2); // Remove the last ", " if there are destinations
-        }
-        sb.append("]\n");
-
-        sb.append("Routing Table:\n");
-        for (Router destination : routingTable.keySet()) {
-            RouterInfo routerInfo = routingTable.get(destination);
-            sb.append("  Destination: ").append(destination.getName());
-            sb.append(", Cost: ").append(routerInfo.getCost());
-            sb.append("\n");
-        }
-        return sb.toString();
+        return "\n\t\tRouter{" +
+                "name='" + name + '\'' +
+                ", neighbors=" + neighbors +
+                ", destinations=" + destinations +
+                ", cost=" + cost +
+                ", routingTable=" + routingTable +
+                "}" + "";
     }
 
     public void addDestination(Router router) {
@@ -89,7 +63,6 @@ public class Router implements IRouter {
     public void addNeighbor(Router u, int linkCost) {
 
     }
-
 
 
     // Ignore this class

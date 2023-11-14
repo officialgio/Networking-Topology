@@ -6,7 +6,6 @@
 
 package org.network;
 
-
 import org.network.Models.Initializer;
 import org.network.Models.Router;
 
@@ -20,7 +19,6 @@ public class Main {
         // 1st: Read from file
         Initializer initializer = new Initializer();
         initializer.init();
-        routers = Initializer.currentRouters;
-        System.out.println(routers);
+        initializer.printRouters();
     }
 }
