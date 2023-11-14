@@ -30,11 +30,25 @@ public class Router implements IRouter {
         name = "";
     }
 
-    @Override
-    public void builder() {
 
+    // TODO: Finish creating string object that'll be sent to the rest of the routers.
+    @Override
+    public String builder() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(name);
+
+        // Get the neighbor name and cost
+        for (Router router : neighbors) {
+            String name1 = router.getName();
+            Integer cost1 = router.getCost();
+            builder.append(name1);
+            builder.append(String.valueOf(cost1));
+        }
+        return new String(builder);
     }
 
+    // TODO: Add functionality to listen to any packets sent by any router.
+    // TODO: Compute the shortest path (i.e update routing table)
     @Override
     public void listener() {
 

@@ -16,7 +16,6 @@ public class Initializer {
 
     public static List<Router> currentRouters = new ArrayList<>();
 
-
     public Initializer(File customFilePath) {
         file = customFilePath;
     }
@@ -161,9 +160,10 @@ public class Initializer {
         }
     }
 
-    // TODO: This is similar to destination but now we need to route the direct neighbors
-    // instead of all possible routes.
-    private static void reRouteDirectRoutes() { }
+    // TODO: This is similar to destination but now we need to route the direct neighbors instead of all possible routes.
+    private static void reRouteDirectRoutes() {
+
+    }
 
     private static void buildRoutingTable() {
         for (Router router : currentRouters) {

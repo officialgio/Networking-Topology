@@ -16,9 +16,15 @@ public class Main {
     private static List<Router> routers = new ArrayList<>();
 
     public static void main(String[] args) {
-        // 1st: Read from file
+        // Step 1
         Initializer initializer = new Initializer();
         initializer.init();
         initializer.printRouters();
+        routers = Initializer.currentRouters;
+
+        // Step 2
+        for (Router router : routers) {
+            router.builder();
+        }
     }
 }

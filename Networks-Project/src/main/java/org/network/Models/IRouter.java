@@ -2,7 +2,7 @@ package org.network.Models;
 
 public interface IRouter {
     void displayTable();
-    void builder();
+    String builder();
     void listener();
     void changeCost();
 }
