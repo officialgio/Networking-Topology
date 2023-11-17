@@ -22,9 +22,11 @@ public class Main {
         initializer.printRouters();
         routers = Initializer.currentRouters;
 
-        // Step 2
+        // TODO: Step 2
         for (Router router : routers) {
             router.builder();
         }
+
+        // TODO: Step 3
     }
 }

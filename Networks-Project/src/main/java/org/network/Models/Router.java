@@ -12,10 +12,10 @@ import java.util.*;
 public class Router implements IRouter {
 
     private String name;
-    private List<Router> neighbors;
-    private List<Router> destinations;
+    private List<String> neighbors;
+    private List<String> destinations;
     private Integer cost;
-    private Map<Router, Integer> routingTable;
+    private Map<String, Integer> routingTable;
 
     public Router(String name) {
         this.name = name;
@@ -38,11 +38,11 @@ public class Router implements IRouter {
         builder.append(name);
 
         // Get the neighbor name and cost
-        for (Router router : neighbors) {
-            String name1 = router.getName();
-            Integer cost1 = router.getCost();
+        for (String router : neighbors) {
+            String name1 = router;
+//            Integer cost1 = router.getCost();
             builder.append(name1);
-            builder.append(String.valueOf(cost1));
+            builder.append(name1);
         }
         return new String(builder);
     }
@@ -71,26 +71,11 @@ public class Router implements IRouter {
     }
 
     public void addDestination(Router router) {
-        destinations.add(router);
+        destinations.add(String.valueOf(router));
     }
 
-    public void addNeighbor(Router u, int linkCost) {
-
-    }
-
-
-    // Ignore this class
-    @Getter
-    private class RouterInfo {
-        private Router destination;
-        private Router neighbor;
-        private int cost;
-
-        public RouterInfo(Router destination, Router neighbor, int cost) {
-            this.destination = destination;
-            this.neighbor = neighbor;
-            this.cost = cost;
-        }
+    public void addNeighbor(String router) {
+        neighbors.add(router);
     }
 }
 
