@@ -1,6 +1,7 @@
 package org.network.Models;
 
 import lombok.NoArgsConstructor;
+import org.network.Topologies.Graph;
 
 import java.io.*;
 import java.util.*;
@@ -13,8 +14,8 @@ public class Initializer {
     private static final String FILE_NAME = "src/config.csv";
     private static File file = new File(FILE_NAME);
     private static List<Router> trackedNeighborRouters = new ArrayList<>();
-
     public static List<Router> currentRouters = new ArrayList<>();
+    private static Graph<Router> graph;
 
     public Initializer(File customFilePath) {
         file = customFilePath;
@@ -40,6 +41,7 @@ public class Initializer {
 
     private static void populateRouters() {
         try {
+            graph = new Graph<>(5);
             Map<String, List<Router>> routerMap = new HashMap<>();
 
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -59,6 +61,10 @@ public class Initializer {
 
                 // Main Router
                 Router router = new Router(routerName);
+                graph.addRouter(router);
+
+
+
                 List<String> neighborNames = new ArrayList<>();
                 List<Integer> neighborCosts = new ArrayList<>();
                 String neighborName = "";

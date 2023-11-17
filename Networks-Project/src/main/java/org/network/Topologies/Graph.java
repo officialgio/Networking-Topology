@@ -1,14 +1,22 @@
 package org.network.Topologies;
 
+/**
 
+          A
+       /  \  \
+      B   C   D
+     / \ /
+    E   F
+
+ */
 import org.network.Models.Router;
 
 import java.util.*;
 
-public class Graph {
-    private static  int V;
-    private static List<Router>[] adj;
-    private static Map<Router, Integer> routerToIndex;
+public class Graph<T extends Router> {
+    private int V;
+    private List<Router>[] adj;
+    private Map<Router, Integer> routerToIndex;
 
     public Graph(int V) {
         this.V = V;
@@ -31,7 +39,7 @@ public class Graph {
     }
 
 
-    public static void BFS(Router source) {
+    public void BFS(Router source) {
         boolean[] visited = new boolean[V];
         Queue<Integer> queue = new LinkedList<>();
 
@@ -54,7 +62,7 @@ public class Graph {
         System.out.println();
     }
 
-    private static Router getRouterByIndex(int index) {
+    private Router getRouterByIndex(int index) {
         for (Map.Entry<Router, Integer> entry : routerToIndex.entrySet()) {
             if (entry.getValue() == index) {
                 return entry.getKey();
@@ -63,9 +71,10 @@ public class Graph {
         return null;
     }
 
-    private void repopulateRouterDestinations(Router router) {
+    public void repopulateRouterDestinations(Router router) {
         for (List<Router> routerList : adj) {
            for (Router currentRouter : routerList) {
+               // TODO: Add destinations by looping through the current destinations
                currentRouter.addDestination(currentRouter);
            }
            break;
@@ -97,9 +106,7 @@ public class Graph {
         System.out.println("BFS starting from R1:");
         graph.BFS(router1);
 
-
-        System.out.println("Testing repopulateRouter");
-//        graph.repopulateRouterDestinations(router1);
+        graph.repopulateRouterDestinations(router1);
     }
 }
 
