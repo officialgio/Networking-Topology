@@ -11,11 +11,10 @@ import java.util.*;
  */
 @NoArgsConstructor
 public class Initializer {
-    private static final String FILE_NAME = "src/config.csv";
-    private static File file = new File(FILE_NAME);
+    private static File file;
     private static List<Router> trackedNeighborRouters = new ArrayList<>();
-    public static List<Router> currentRouters = new ArrayList<>();
     private static Graph<Router> graph;
+    public static List<Router> currentRouters = new ArrayList<>();
 
     public Initializer(File customFilePath) {
         file = customFilePath;
@@ -23,8 +22,6 @@ public class Initializer {
 
     public void init() {
         // 1st: Read from file
-        File file = new File(FILE_NAME);
-
         // If it doesn't exist then create it
         if (!file.exists()) {
             try {
