@@ -20,7 +20,7 @@ public class Initializer {
         file = customFilePath;
     }
 
-    public void init() {
+    public void init(int numberOfRouters) {
         // 1st: Read from file
         // If it doesn't exist then create it
         if (!file.exists()) {
@@ -32,13 +32,13 @@ public class Initializer {
                 System.out.println(e);
             }
         }
-        populateRouters();
+        populateRouters(numberOfRouters);
         buildRoutingTable();
     }
 
-    private static void populateRouters() {
+    private static void populateRouters(int numberOfRouters) {
         try {
-            graph = new Graph<Router>(5);
+            graph = new Graph<Router>(numberOfRouters);
             Map<String, List<Router>> routerMap = new HashMap<>();
 
             BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -86,20 +86,12 @@ public class Initializer {
                         if (!routerMap.containsKey(router.getName())) {
                             routerMap.put(router.getName(), new ArrayList<>());
                         }
-
-//                        if (!routerMap.containsKey(neighborName)) {
-//                            routerMap.put(neighborRouter.getName(), new ArrayList<>());
-//                        }
                     }
 
                     if (element.endsWith(")")) {
                         // This is a cost, remove the closing parenthesis and convert to an integer
                         cost = Integer.parseInt(element.substring(0, element.length() - 1));
                         graph.addEdge(router, neighborRouter, cost);
-//                        neighborRouter.setCost(cost);// Add the corresponding neighbor name
-
-                        // We know the cost is the final property so just add it
-//                        router.addDestination(neighborRouter);
                     }
                 }
                 currentRouters.add(router);
@@ -113,7 +105,7 @@ public class Initializer {
     }
 
     private static void runBfsOnCurrentGraph() {
-        System.out.println("BFS starting from R1:");
+        System.out.println("\nBFS starting from R1:");
         for (Router router : currentRouters) {
             graph.BFS(router);
             break;

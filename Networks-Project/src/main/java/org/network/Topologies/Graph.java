@@ -5,6 +5,9 @@ import org.network.Models.Router;
 
 import java.util.*;
 
+/**
+ * Custom Graph dedicated for Routing.
+ */
 public class Graph<T extends  Router> {
     private int V;
     private List<Edge>[] adj;

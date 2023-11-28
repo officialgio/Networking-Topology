@@ -31,28 +31,11 @@ public class Router implements IRouter {
     }
 
 
-    // TODO: Finish creating string object that'll be sent to the rest of the routers.
     @Override
-    public String builder() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(name);
+    public String builder() { return new String(); }
 
-        // Get the neighbor name and cost
-        for (String router : neighbors) {
-            String name1 = router;
-//            Integer cost1 = router.getCost();
-            builder.append(name1);
-            builder.append(name1);
-        }
-        return new String(builder);
-    }
-
-    // TODO: Add functionality to listen to any packets sent by any router.
-    // TODO: Compute the shortest path (i.e update routing table)
     @Override
-    public void listener() {
-
-    }
+    public void listener() {}
 
     @Override
     public void changeCost() {
